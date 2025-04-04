@@ -66,7 +66,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 /* operators */
  "+"            { return symbol(sym.CONCAT); }    //concatenation operation
 
-/*
+
 "if"            { return symbol(sym.IF); }                 
 "else"          { return symbol(sym.ELSE); }
 "prefix"        { return symbol(sym.PREFIX); }
@@ -75,7 +75,11 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
  "("            { return symbol(sym.LPAREN); }
  ")"            { return symbol(sym.RPAREN); }
-*/
+ "{"            { return symbol(sym.LCBRACKET); }
+ "}"            { return symbol(sym.RCBRACKET); }
+ ","            { return symbol(sym.COMMA); }
+
+ [a-zA-Z_][a-zA-Z0-9_]*    { return symbol(sym.ID, yytext()); }
 
  \"             { stringBuffer.setLength(0); yybegin(STRING); }
  {WhiteSpace}   { /* just skip what was found, do nothing */ }

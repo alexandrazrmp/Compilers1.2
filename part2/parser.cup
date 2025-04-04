@@ -21,12 +21,12 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            CONCAT;
-/*terminal            IF, ELSE, REVERSE, LPAREN, RPAREN, PREFIX, SUFFIX, COMMA, LCBRACKET, RCBRACKET;*/
+terminal            CONCAT, LPAREN, RPAREN, LCBRACKET, RCBRACKET, COMMA, IF, ELSE, REVERSE, PREFIX, SUFFIX;
 terminal String     STRING_LITERAL;        /*our scanner provides strings*/
+terminal String     ID;
 
 /*  Non terminals */
-non terminal            expr_list;  //, start, function_decl;
+non terminal s, function_decl;
 non terminal String     expr;      /*used to store evaluated subexpressions (strings)*/
 
 /**
@@ -40,8 +40,14 @@ precedence left CONCAT;
  *  The Grammar Rules
  */
 
-expr_list ::= expr:e   {:System.out.println(e); :};
+s ::=   expr:e      {:System.out.println(e); :}
+        |   function_decl:fd   {:System.out.println(fd);:}
+        ;  
 
 expr ::= expr:e1 CONCAT expr:e2         {: RESULT = e1 + e2; :}
         | STRING_LITERAL:s              {: RESULT = s; :}
        ;
+
+function_decl  ::=  ID:s1 LPAREN ID:s2 RPAREN LCBRACKET
+                    ID:fun RCBRACKET    {:System.out.println("ayeeee"); :}
+                ;
