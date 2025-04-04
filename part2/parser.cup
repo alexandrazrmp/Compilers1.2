@@ -26,7 +26,7 @@ terminal            CONCAT;
 terminal String     STRING_LITERAL;        /*our scanner provides strings*/
 
 /*  Non terminals */
-/*non terminal            expr_list, start, function_decl;*/
+non terminal            expr_list;  //, start, function_decl;
 non terminal String     expr;      /*used to store evaluated subexpressions (strings)*/
 
 /**
@@ -40,5 +40,8 @@ precedence left CONCAT;
  *  The Grammar Rules
  */
 
-expr      ::= expr:e1 CONCAT  expr:e2         {: RESULT = e1 + e2; System.out.println(RESULT);   :}          //new
-        | STRING_LITERAL:s       {: RESULT = s;     :}  ;             // String literal
+expr_list ::= expr:e   {:System.out.println(e); :};
+
+expr ::= expr:e1 CONCAT expr:e2         {: RESULT = e1 + e2; :}
+        | STRING_LITERAL:s              {: RESULT = s; :}
+       ;
