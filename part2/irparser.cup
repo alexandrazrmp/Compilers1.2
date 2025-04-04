@@ -9,8 +9,8 @@ import java_cup.runtime.*;
  */
 parser code {:
     // Connect this parser to a scanner!
-    Scanner s;
-    Parser(Scanner s){ this.s=s; }
+    irScanner s;
+    irParser(irScanner s){ this.s=s; }
 :}
 
 /* define how to connect to the scanner! */
@@ -40,14 +40,14 @@ precedence left CONCAT;
  *  The Grammar Rules
  */
 
-s ::= expr:e {: System.out.println(e); :}
-    | function_decl:fd {: System.out.println(fd); :}
-    ;
+s ::=   expr:e      {:System.out.println(e); :}
+        |   function_decl:fd   {:System.out.println(fd);:}
+        ;  
 
-expr ::= expr:e1 CONCAT expr:e2 {: RESULT = e1 + " + " + e2; :}
-    | STRING_LITERAL:s {: RESULT = "\"" + s + "\""; :}
-    ;
+expr ::= expr:e1 CONCAT expr:e2         {: RESULT = e1 + e2; :}
+        | STRING_LITERAL:s              {: RESULT = s; :}
+       ;
 
-function_decl ::= ID:s1 LPAREN ID:s2 RPAREN LCBRACKET
-                  ID:fun RCBRACKET {: System.out.println("STRING_LITERAL received: " + s); RESULT = "\"" + s + "\""; :}
+function_decl  ::=  ID:s1 LPAREN ID:s2 RPAREN LCBRACKET
+                    ID:fun RCBRACKET    {:System.out.println("ayeeee"); :}
                 ;
