@@ -67,7 +67,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
  "+"            { return symbol(sym.CONCAT); }    //concatenation operation
 
 /*
-"if"            { return symbol(sym.IF); }                       //new
+"if"            { return symbol(sym.IF); }                 
 "else"          { return symbol(sym.ELSE); }
 "prefix"        { return symbol(sym.PREFIX); }
 "suffix"        { return symbol(sym.SUFFIX); }

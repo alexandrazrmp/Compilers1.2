@@ -21,14 +21,13 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            CONCAT
+terminal            CONCAT;
 /*terminal            IF, ELSE, REVERSE, LPAREN, RPAREN, PREFIX, SUFFIX, COMMA, LCBRACKET, RCBRACKET;*/
 terminal String     STRING_LITERAL;        /*our scanner provides strings*/
 
 /*  Non terminals */
-non terminal            start;
 /*non terminal            expr_list, start, function_decl;*/
-non terminal String   expr;      /*used to store evaluated subexpressions (strings)*/
+non terminal String     expr;      /*used to store evaluated subexpressions (strings)*/
 
 /**
  *  Precedence Declarations
@@ -41,8 +40,5 @@ precedence left CONCAT;
  *  The Grammar Rules
  */
 
-start ::= expr;
-
-
-expr      ::= expr:e1 CONCAT  expr:e2         {: RESULT = e1 + e2;    :}          //new
-        | STRING_LITERAL:s       {: RESULT = s; :}  ;             // String literal
+expr      ::= expr:e1 CONCAT  expr:e2         {: RESULT = e1 + e2; System.out.println(RESULT);   :}          //new
+        | STRING_LITERAL:s       {: RESULT = s;     :}  ;             // String literal
