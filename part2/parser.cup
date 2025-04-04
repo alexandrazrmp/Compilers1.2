@@ -21,29 +21,28 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, TIMES, LPAREN, RPAREN;
-terminal String     STRING_LITERAL;        // our scanner provides numbers as strings
+terminal            CONCAT
+/*terminal            IF, ELSE, REVERSE, LPAREN, RPAREN, PREFIX, SUFFIX, COMMA, LCBRACKET, RCBRACKET;*/
+terminal String     STRING_LITERAL;        /*our scanner provides strings*/
 
 /*  Non terminals */
-non terminal            expr_list;
-non terminal Integer    expr;      // used to store evaluated subexpressions
+non terminal            start;
+/*non terminal            expr_list, start, function_decl;*/
+non terminal String   expr;      /*used to store evaluated subexpressions (strings)*/
 
 /**
  *  Precedence Declarations
  */
+/*precedence left IF, ELSE;*/
 precedence left CONCAT;
+/*precedence left REVERSE;*/
 
 /**
  *  The Grammar Rules
  */
-expr_list ::= expr_list expr:e SEMI         {: System.out.println(e);         :}
-            | expr:e SEMI                   {: System.out.println(e);         :}
-;
-expr      ::= expr:e1 CONCAT  expr:e2         {: RESULT = e1.toString() + e2.toString();    :}          //new
 
-/*             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;                :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;                :}
-*/
-             | LPAREN expr:e RPAREN	        {: RESULT = e;                    :}
-             | STRING_LITERAL:s	            {: RESULT = Integer.parseInt(s);  :}
-             ;
+start ::= expr;
+
+
+expr      ::= expr:e1 CONCAT  expr:e2         {: RESULT = e1 + e2;    :}          //new
+        | STRING_LITERAL:s       {: RESULT = s; :}  ;             // String literal

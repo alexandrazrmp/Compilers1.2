@@ -72,11 +72,10 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 "prefix"        { return symbol(sym.PREFIX); }
 "suffix"        { return symbol(sym.SUFFIX); }
 "reverse"       { return symbol(sym.REVERSE); }
-*/
 
  "("            { return symbol(sym.LPAREN); }
  ")"            { return symbol(sym.RPAREN); }
-
+*/
 
  \"             { stringBuffer.setLength(0); yybegin(STRING); }
  {WhiteSpace}   { /* just skip what was found, do nothing */ }
