@@ -38,6 +38,9 @@ precedence left IF, ELSE;
 precedence left CONCAT;
 precedence left REVERSE;
 
+
+
+
 /**
  *  The Grammar Rules
  */
@@ -45,16 +48,16 @@ precedence left REVERSE;
 s ::= function_decls:fd function_calls:fc  {: System.out.println(
     "public class Translated {\n" +  "public static void main(String[] args) {\n"
     + fc + "  }\n"
-    + fd
+    + fd +
     "}"); :} ;
 
-function_decls ::= function_decl:fd function_decls:rest  {: RESULT = fd + "\n" + rest; :}
-                  |function_decl:fd {:RESULT = fd; :}
-                  ;
+function_decls ::=  function_decls:rest function_decl:fd {: RESULT = fd + "\n" + rest; :}
+                | function_decl:fd {: RESULT = fd;:}
+                ;
 
 
-function_calls ::=  function_call:fc function_calls:rest     {: RESULT = fc + "\n" + rest; :}
-            |  function_call:fc            {: RESULT = fc; :}
+function_calls ::=  function_calls:rest function_call:fc    {: RESULT = fc + "\n" + rest; :}
+            |  function_call:fc {: RESULT = fc; :}
             ;
 
 expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
@@ -62,12 +65,9 @@ expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
      | ID:i                      {: RESULT = i; :}
      ;
 
-function_decls ::= function_decls:rest function_decl:fd 
-    {: RESULT = rest + "\n" + fd; :}
-  | function_decl:fd 
-    {: RESULT = fd; :}
-;
-
+function_decl ::= ID:name LPAREN parameters:p RPAREN LCBRACKET
+                  ID:body RCBRACKET {: RESULT = name + "(" + p + ") {\n  " + body + "\n}"; :}
+                ;
 
 function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")\n"; :};
 
