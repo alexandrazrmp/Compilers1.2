@@ -48,13 +48,13 @@ s ::= function_decls:fd function_calls:fc  {: System.out.println(
     + fd +
     "}"); :} ;
 
-function_decls ::=  function_decls:rest function_decl:fd {: RESULT = fd + "\n" + rest; :}
+function_decls ::=  function_decls:rest function_decl:fd {: RESULT = rest + "\n" + fd; :}
                     |function_decl:fd {: RESULT = fd;:}
                     ;
 
 
-function_calls ::= function_calls:rest function_call:fc    {: RESULT = fc + "\n" + rest; :}
-                | function_call:fc {: RESULT = fc; :}
+function_calls ::= function_calls:rest function_call:fc    {: RESULT = rest + "\n" + fc; :}
+                | function_call:fc {: RESULT = fc+ "\n"; :}
                 ;
 
 expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
@@ -67,9 +67,10 @@ function_decl ::= ID:name LPAREN parameters:p RPAREN LCBRACKET
                 ;
 
 
-function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")\n"; :};
+function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ");\n"; :};
 
 parameters  ::= expr:p COMMA parameters:rest   {: RESULT = p + ", " + rest; :}
                 |expr:p {:RESULT = p;:}
                 | {:RESULT = "";:}
+                | function_call:fc {:RESULT = fc;:}
                 ;

@@ -27,7 +27,7 @@ terminal String     STRING_LITERAL;        /*our scanner provides strings*/
 terminal String     ID;
 
 /*  Non terminals */
-non terminal s, function_decl, function_call, parameters, program;
+non terminal s, function_decl, function_call, parameters, function_decls, function_calls;
 non terminal String     expr ;
 
 /**
@@ -41,15 +41,17 @@ precedence left REVERSE;
  *  The Grammar Rules
  */
 
-s ::= program   {: System.out.println(RESULT); :}   
-;
 
-program ::= function_decl:fd s:rest    {: RESULT = fd + "\n" + rest; :}
-            |  function_decl:fd            {: RESULT = fd; :}
-            |  function_call:fc s:rest     {: RESULT = fc + "\n" + rest; :}
-            |  function_call:fc            {: RESULT = fc; :}
-            ;
+s ::= function_decls:fd function_calls:fc  {: System.out.println(fd); System.out.println(fc); :} ;
 
+function_decls ::=  function_decls:rest function_decl:fd {: RESULT = rest + "\n" + fd; :}
+                    |function_decl:fd {: RESULT = fd;:}
+                    ;
+
+
+function_calls ::= function_calls:rest function_call:fc    {: RESULT = rest + "\n" + fc; :}
+                | function_call:fc {: RESULT = fc; :}
+                ;
 
 expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
      | STRING_LITERAL:s          {: RESULT = "\"" + s + "\""; :}
@@ -60,7 +62,8 @@ function_decl ::= ID:name LPAREN parameters:p RPAREN LCBRACKET
                   expr:body RCBRACKET {: RESULT = name + "(" + p + ") {\n  " + body + "\n}"; :}
                 ;
 
-function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :};
+
+function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")\n"; :};
 
 parameters  ::= expr:p COMMA parameters:rest   {: RESULT = p + ", " + rest; :}
                 |expr:p {:RESULT = p;:}
