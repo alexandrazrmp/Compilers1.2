@@ -24,8 +24,7 @@ scan with {: return s.next_token(); :};
 /* Terminals (tokens returned by the scanner). */
 terminal            CONCAT, LPAREN, RPAREN, LCBRACKET, RCBRACKET, COMMA,
                     IF, ELSE, REVERSE, PREFIX;
-terminal String     STRING_LITERAL;        /*our scanner provides strings*/
-terminal String     ID;
+terminal String     STRING_LITERAL, ID;        /*our scanner provides strings*/
 
 /*  Non terminals */
 non terminal s, function_decl, function_call, parameters, function_calls, function_decls;
