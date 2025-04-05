@@ -38,8 +38,6 @@ precedence left CONCAT;
 precedence left REVERSE;
 
 
-
-
 /**
  *  The Grammar Rules
  */
@@ -51,13 +49,13 @@ s ::= function_decls:fd function_calls:fc  {: System.out.println(
     "}"); :} ;
 
 function_decls ::=  function_decls:rest function_decl:fd {: RESULT = fd + "\n" + rest; :}
-                | function_decl:fd {: RESULT = fd;:}
+                    |function_decl:fd {: RESULT = fd;:}
+                    ;
+
+
+function_calls ::= function_calls:rest function_call:fc    {: RESULT = fc + "\n" + rest; :}
+                | function_call:fc {: RESULT = fc; :}
                 ;
-
-
-function_calls ::=  function_calls:rest function_call:fc    {: RESULT = fc + "\n" + rest; :}
-            |  function_call:fc {: RESULT = fc; :}
-            ;
 
 expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
      | STRING_LITERAL:s          {: RESULT = "\"" + s + "\""; :}
@@ -65,8 +63,9 @@ expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
      ;
 
 function_decl ::= ID:name LPAREN parameters:p RPAREN LCBRACKET
-                  ID:body RCBRACKET {: RESULT = name + "(" + p + ") {\n  " + body + "\n}"; :}
+                  expr:body RCBRACKET {: RESULT = "public static String "+ name + "(" + p + ") {\n  return " + body + ";\n}"; :}
                 ;
+
 
 function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")\n"; :};
 
