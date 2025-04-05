@@ -28,7 +28,7 @@ terminal String     STRING_LITERAL;        /*our scanner provides strings*/
 terminal String     ID;
 
 /*  Non terminals */
-non terminal s, function_decl, function_call, parameters, program;
+non terminal s, function_decl, function_call, parameters, function_calls, function_decls;
 non terminal String     expr ;
 
 /**
@@ -42,25 +42,34 @@ precedence left REVERSE;
  *  The Grammar Rules
  */
 
-s ::= program   {: System.out.println(RESULT); :}   ;
+s ::= function_decls:fd function_calls:fc  {: System.out.println(
+    "public class Translated {\n" +  "public static void main(String[] args) {\n"
+    + fc + "  }\n"
+    + fd
+    "}"); :} ;
 
-program ::= function_decl:fd s:rest    {: RESULT = fd + "\n" + rest; :}
-            |  function_decl:fd            {: RESULT = fd; :}
-            |  function_call:fc s:rest     {: RESULT = fc + "\n" + rest; :}
+function_decls ::= function_decl:fd function_decls:rest  {: RESULT = fd + "\n" + rest; :}
+                  |function_decl:fd {:RESULT = fd; :}
+                  ;
+
+
+function_calls ::=  function_call:fc function_calls:rest     {: RESULT = fc + "\n" + rest; :}
             |  function_call:fc            {: RESULT = fc; :}
             ;
-
 
 expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
      | STRING_LITERAL:s          {: RESULT = "\"" + s + "\""; :}
      | ID:i                      {: RESULT = i; :}
      ;
 
-function_decl ::= ID:name LPAREN parameters:p RPAREN LCBRACKET
-                  ID:body RCBRACKET {: RESULT = name + "(" + p + ") {\n  " + body + "\n}"; :}
-                ;
+function_decls ::= function_decls:rest function_decl:fd 
+    {: RESULT = rest + "\n" + fd; :}
+  | function_decl:fd 
+    {: RESULT = fd; :}
+;
 
-function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :};
+
+function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")\n"; :};
 
 parameters  ::= expr:p COMMA parameters:rest   {: RESULT = p + ", " + rest; :}
                 |expr:p {:RESULT = p;:}
