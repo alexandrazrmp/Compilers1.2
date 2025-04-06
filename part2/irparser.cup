@@ -27,7 +27,7 @@ terminal            CONCAT, LPAREN, RPAREN, LCBRACKET, RCBRACKET, COMMA,
 terminal String     STRING_LITERAL, ID;        /*our scanner provides strings*/
 
 /*  Non terminals */
-non terminal s, function_decl, function_call, parameters, function_calls, function_decls, fd_parameters;
+non terminal s, function_decl, function_call, parameters, function_calls, function_decls, fd_parameters, nested_function_call, parameter;
 non terminal String     expr ;
 
 /**
@@ -72,11 +72,18 @@ function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = "System.out.p
                     | ID:name LPAREN RPAREN {: RESULT = "System.out.println(" + name + "());\n"; :}
                     ;
 
-parameters  ::= parameters:rest COMMA STRING_LITERAL:sl   {: RESULT = rest + ", " + "\"" + sl + "\""; :}
-                |STRING_LITERAL:sl {:RESULT = "\"" + sl + "\"";:}
-                |parameters:rest COMMA function_call:fc   {: RESULT = rest + ", " + fc; :}
-                | function_call:fc {:RESULT = fc;:}
-                ;
+nested_function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :}
+                    | ID:name LPAREN RPAREN {: RESULT = name + "()"; :}
+                    ;
+
+
+parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
+             | parameter:p {: RESULT = p; :}
+             ;
+
+parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\""; :}
+            | nested_function_call:fc {: RESULT = fc; :}
+            ;
 
 fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String " + id; :}
                   | ID:id    {: RESULT = "String " + id; :}
