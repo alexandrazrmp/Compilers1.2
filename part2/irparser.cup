@@ -64,20 +64,20 @@ expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
 
 function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET  expr:body  RCBRACKET 
                 {: RESULT = "public static String "+ name + "(" + p + ") {\n  return " + body + ";\n}"; :}
-                | ID:name LPAREN RPAREN LCBRACKET  expr:body RCBRACKET 
+                | ID:name LPAREN RPAREN LCBRACKET expr:body RCBRACKET 
                 {: RESULT = "public static String "+ name + "() {\n  return " + body + ";\n}"; :}
                 ;
 
-function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ");\n"; :}
-                    | ID:name LPAREN RPAREN {: RESULT = name + "();\n"; :}
+function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = "System.out.println(" + name + "(" + p + "));\n"; :}
+                    | ID:name LPAREN RPAREN {: RESULT = "System.out.println(" + name + "());\n"; :}
                     ;
 
-parameters  ::= parameters:rest COMMA STRING_LITERAL:sl   {: RESULT = rest + ", " + sl; :}
-                |STRING_LITERAL:sl {:RESULT = sl;:}
+parameters  ::= parameters:rest COMMA STRING_LITERAL:sl   {: RESULT = rest + ", " + "\"" + sl + "\""; :}
+                |STRING_LITERAL:sl {:RESULT = "\"" + sl + "\"";:}
                 |parameters:rest COMMA function_call:fc   {: RESULT = rest + ", " + fc; :}
                 | function_call:fc {:RESULT = fc;:}
                 ;
 
-fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String" + id; :}
+fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String " + id; :}
                   | ID:id    {: RESULT = "String " + id; :}
                   ;
