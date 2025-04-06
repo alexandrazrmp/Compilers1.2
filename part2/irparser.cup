@@ -27,7 +27,7 @@ terminal            CONCAT, LPAREN, RPAREN, LCBRACKET, RCBRACKET, COMMA,
 terminal String     STRING_LITERAL, ID;        /*our scanner provides strings*/
 
 /*  Non terminals */
-non terminal s, function_decl, function_call, parameters, function_calls, function_decls;
+non terminal s, function_decl, function_call, parameters, function_calls, function_decls, fd_parameters;
 non terminal String     expr ;
 
 /**
@@ -62,15 +62,21 @@ expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
      | ID:i                      {: RESULT = i; :}
      ;
 
-function_decl ::= ID:name LPAREN parameters:p RPAREN LCBRACKET
+function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET
                   expr:body RCBRACKET {: RESULT = "public static String "+ name + "(" + p + ") {\n  return " + body + ";\n}"; :}
                 ;
 
 
 function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ");\n"; :};
 
-parameters  ::= expr:p COMMA parameters:rest   {: RESULT = p + ", " + rest; :}
-                |expr:p {:RESULT = p;:}
+parameters  ::= parameters:rest COMMA STRING_LITERAL:sl   {: RESULT = rest + ", " + sl; :}
+                |STRING_LITERAL:sl {:RESULT = sl;:}
+                |parameters:rest COMMA function_call:fc   {: RESULT = rest + ", " + fc; :}
                 | {:RESULT = "";:}
                 | function_call:fc {:RESULT = fc;:}
                 ;
+
+fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String" + id; :}
+                  | ID:id    {: RESULT = "String " + id; :}
+                  | {:RESULT = "";:}
+                  ;
