@@ -79,8 +79,8 @@ parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
              | parameter:p {: RESULT = p; :}
              ;
 
-parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\"" + "YOOOOOOOOOOOOOOOOOOOOOOOOOOO"; :}
-            | nested_function_call:fc {: RESULT = fc  + "" ; :}
+parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\""; :}
+            | nested_function_call:fc {: RESULT = fc; :}
             ;
 
 nested_function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :}
