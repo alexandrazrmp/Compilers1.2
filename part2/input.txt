@@ -1,4 +1,4 @@
-name()  {
+name(a)  {
   "John"
 }
     
@@ -10,14 +10,18 @@ fullname(first_name, sep, last_name) {
   first_name + sep + last_name
 }
 
-name()
+name("a")
+
+name(surname())
 surname()
+fullname("a", " ", "b")
+fullname("aaaaaaaa", "", " ")
 
 fullname(name(), " ", surname())
-fullname("a", " ", "b")
+
 fullname(name(), name(), surname())
 
-
+fullname("a", " ", "b")
 
 parameters  ::= parameters:rest COMMA STRING_LITERAL:sl   {: RESULT = rest + ", " + "\"" + sl + "\""; :}
                 |STRING_LITERAL:sl {:RESULT = "\"" + sl + "\"";:}

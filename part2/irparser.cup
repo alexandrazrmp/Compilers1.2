@@ -52,39 +52,37 @@ function_decls ::=  function_decls:rest function_decl:fd {: RESULT = rest + "\n"
                     |function_decl:fd {: RESULT = fd;:}
                     ;
 
-
-function_calls ::= function_calls:rest function_call:fc {: RESULT = rest + "\n" + fc; :}
-                | function_call:fc {: RESULT = fc+ "\n"; :}
-                ;
-
-expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
-     | STRING_LITERAL:s          {: RESULT = "\"" + s + "\""; :}
-     | ID:var                      {: RESULT = var; :}
-     ;
-
 function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET  expr:body  RCBRACKET 
                 {: RESULT = "public static String "+ name + "(" + p + ") {\n  return " + body + ";\n}"; :}
                 | ID:name LPAREN RPAREN LCBRACKET expr:body RCBRACKET 
                 {: RESULT = "public static String "+ name + "() {\n  return " + body + ";\n}"; :}
                 ;
 
+fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String " + id; :}
+                  | ID:id    {: RESULT = "String " + id; :}
+                  ;
+
+function_calls ::= function_calls:rest function_call:fc {: RESULT = rest + "\n" + fc; :}
+                | function_call:fc {: RESULT = fc+ "\n"; :}
+                ;
+
 function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = "System.out.println(" + name + "(" + p + "));\n"; :}
                     | ID:name LPAREN RPAREN {: RESULT = "System.out.println(" + name + "());\n"; :}
                     ;
 
-nested_function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :}
-                    | ID:name LPAREN RPAREN {: RESULT = name + "()"; :}
-                    ;
-
+expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
+     | STRING_LITERAL:s          {: RESULT = "\"" + s + "\""; :}
+     | ID:var                      {: RESULT = var; :}
+     ;
 
 parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
              | parameter:p {: RESULT = p; :}
              ;
 
-parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\""; :}
-            | nested_function_call:fc {: RESULT = fc; :}
+parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\"" + "YOOOOOOOOOOOOOOOOOOOOOOOOOOO"; :}
+            | nested_function_call:fc {: RESULT = fc  + "" ; :}
             ;
 
-fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String " + id; :}
-                  | ID:id    {: RESULT = "String " + id; :}
-                  ;
+nested_function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :}
+                    | ID:name LPAREN RPAREN {: RESULT = name + "()"; :}
+                    ;
