@@ -39,7 +39,7 @@ $(IR_SCANNER_OUT): $(IR_SCANNER_SRC)
 
 # Generate parser for Stage 2 (IR processing)
 $(IR_PARSER_OUT): $(IR_PARSER_SRC)
-	$(CUP) -interface -parser irParser $(IR_PARSER_SRC)
+	$(CUP) -interface -parser irParser -symbols irSym $(IR_PARSER_SRC)
 
 # Compile all Java files
 compiler: $(SCANNER_OUT) $(PARSER_OUT) $(IR_SCANNER_OUT) $(IR_PARSER_OUT)
