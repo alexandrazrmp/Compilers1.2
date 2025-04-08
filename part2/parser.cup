@@ -28,8 +28,9 @@ terminal String     ID;
 
 
 /* Non-terminals */
-non terminal s, function_decl, function_call, parameters, function_calls, function_decls, fd_parameters, nested_function_call, parameter;
-non terminal String expr;
+non terminal s, function_decl, parameters, function_calls, function_decls, fd_parameters, parameter;
+non terminal function_body, function_call, if_body;
+non terminal String expr, nested_function_call;
 
 /**
  *  Precedence Declarations
@@ -44,10 +45,10 @@ s ::= function_decls:fd function_calls:fc {: System.out.println(fd); System.out.
 function_decls ::= function_decls:rest function_decl:fd {: RESULT = rest + "\n" + fd; :}
                   | function_decl:fd {: RESULT = fd; :} ;
 
-function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET expr:body RCBRACKET 
-                {: RESULT = name + "(" + p + ") {" + body + "\n}"; :}
-                | ID:name LPAREN RPAREN LCBRACKET expr:body RCBRACKET 
-                {: RESULT = name + "() {" + body + "\n}"; :} ;
+function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET function_body:body RCBRACKET 
+                {: RESULT = name + "(" + p + ") { \n    " + body + "\n}"; :}
+                | ID:name LPAREN RPAREN LCBRACKET function_body:body RCBRACKET 
+                {: RESULT = name + "() { \n    " + body + "\n}"; :} ;
 
 fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT = rest + ", " + id; :}
                  | ID:id {: RESULT = id; :} ;
@@ -58,9 +59,19 @@ function_calls ::= function_calls:rest function_call:fc {: RESULT = rest +  "\n"
 function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")\n"; :}
                  | ID:name LPAREN RPAREN {: RESULT = name + "()\n"; :} ;
 
+function_body ::= expr:e {: RESULT = e; :}
+                | IF LPAREN if_body:body RPAREN function_body:b1 ELSE function_body:b2 
+                {: RESULT = "if (" + body + ")\n        " + b1 + "\n     else\n        " + b2; :}
+                ;
+
+if_body ::= ID:id1 PREFIX ID:id2  {:RESULT = id1 + " prefix " + id2;:}
+            ;
+
 expr ::= expr:e1 CONCAT expr:e2 {: RESULT = e1 + "+" + e2; :}
        | STRING_LITERAL:s {: RESULT = "\"" + s + "\""; :}
-       | ID:var {: RESULT = var; :} ;
+       | ID:var {: RESULT = var; :}
+       | nested_function_call:fc {: RESULT = fc; :}
+        ;
 
 parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
              | parameter:p {: RESULT = p; :} ;
