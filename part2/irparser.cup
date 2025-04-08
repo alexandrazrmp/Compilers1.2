@@ -47,16 +47,16 @@ s ::= function_decls:fd function_calls:fc  {: System.out.println(
     "public class Translated {\n" +  "    public static void main(String[] args) {\n"
     + fc + "    }\n"
     + fd +
-    "}") ; :} ;
+    "\n}") ; :} ;
 
 function_decls ::=  function_decls:rest function_decl:fd {: RESULT = rest + "\n" + fd; :}
                     |function_decl:fd {: RESULT = fd;:}
                     ;
 
 function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET  function_body:body  RCBRACKET 
-                {: RESULT = "    public static String "+ name + "(" + p + ") {\n" + body + "\n}"; :}
+                {: RESULT = "    public static String "+ name + "(" + p + ") {\n" + body + "\n    }"; :}
                 | ID:name LPAREN RPAREN LCBRACKET function_body:body RCBRACKET 
-                {: RESULT = "    public static String "+ name + "() {\n" + body + "\n}"; :}
+                {: RESULT = "    public static String "+ name + "() {\n" + body + "\n    }"; :}
                 ;
 
 fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String " + id; :}
@@ -71,9 +71,9 @@ function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = "        Syst
                     | ID:name LPAREN RPAREN {: RESULT = "        System.out.println(" + name + "());\n"; :}
                     ;
 
-function_body ::= expr:e {: RESULT = "        return "+ e +"; \n"; :}
+function_body ::= expr:e {: RESULT = "        return "+ e +";"; :}
                 | IF LPAREN if_body:b RPAREN function_body:b1 ELSE function_body:b2 
-                {: RESULT = "if (" + b + ") {\n" + b1 + "} else {\n" + b2 + "}" ; :}
+                {: RESULT = "        if (" + b + ") {\n    " + b1 + "\n        } else {\n    " + b2 + "\n        }" ; :}
                 ;
 
 
