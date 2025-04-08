@@ -46,9 +46,9 @@ function_decls ::= function_decls:rest function_decl:fd {: RESULT = rest + "\n" 
                   | function_decl:fd {: RESULT = fd; :} ;
 
 function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET function_body:body RCBRACKET 
-                {: RESULT = name + "(" + p + ") { \n    " + body + "\n}"; :}
+                {: RESULT = name + "(" + p + ") { \n    " + body + "\n} \n"; :}
                 | ID:name LPAREN RPAREN LCBRACKET function_body:body RCBRACKET 
-                {: RESULT = name + "() { \n    " + body + "\n}"; :} ;
+                {: RESULT = name + "() { \n    " + body + "\n} \n"; :} ;
 
 fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT = rest + ", " + id; :}
                  | ID:id {: RESULT = id; :} ;
