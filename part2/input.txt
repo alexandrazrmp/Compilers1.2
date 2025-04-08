@@ -33,7 +33,7 @@ repeat(x){
 }
 
 cond_repeat(c, x){
-  if (x prefix c)
+  if (reverse x prefix c)
     name()
   else
     x

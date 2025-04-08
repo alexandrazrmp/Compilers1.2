@@ -64,13 +64,14 @@ function_body ::= expr:e {: RESULT = e; :}
                 {: RESULT = "if (" + body + ")\n        " + b1 + "\n     else\n        " + b2; :}
                 ;
 
-if_body ::= ID:id1 PREFIX ID:id2  {:RESULT = id1 + " prefix " + id2;:}
+if_body ::= expr:id1 PREFIX expr:id2  {:RESULT = id1 + " prefix " + id2;:}
             ;
 
 expr ::= expr:e1 CONCAT expr:e2 {: RESULT = e1 + "+" + e2; :}
        | STRING_LITERAL:s {: RESULT = "\"" + s + "\""; :}
        | ID:var {: RESULT = var; :}
        | nested_function_call:fc {: RESULT = fc; :}
+       | REVERSE expr:e {: RESULT = "reverse " + e; :}
         ;
 
 parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
