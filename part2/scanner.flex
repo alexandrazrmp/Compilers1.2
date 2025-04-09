@@ -65,12 +65,12 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 <YYINITIAL> {
 /* operators */
 "+"            { return symbol(sym.CONCAT); }    //concatenation operation
-//"="            { return symbol(sym.EQUAL);  }
+"="            { return symbol(sym.EQUAL);  }
 
 "if"            { return symbol(sym.IF); }                 
 "else"          { return symbol(sym.ELSE); }
 "prefix"        { return symbol(sym.PREFIX); }
-//"suffix"        { return symbol(sym.SUFFIX); }
+"suffix"        { return symbol(sym.SUFFIX); }
 "reverse"       { return symbol(sym.REVERSE); }
 
  "("            { return symbol(sym.LPAREN); }
