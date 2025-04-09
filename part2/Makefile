@@ -29,21 +29,27 @@ all: compiler
 $(SCANNER_OUT): $(SCANNER_SRC)
 	$(JFLEX) $(SCANNER_SRC)
 
+$(PARSER_OUT): $(SCANNER_OUT)
+# Ensure IR scanner is built before IR parser
+$(IR_PARSER_OUT): $(IR_SCANNER_OUT)
+
 # Generate parser for Stage 1
-$(PARSER_OUT): $(PARSER_SRC)
-	$(CUP) -interface -parser Parser $(PARSER_SRC)
+Parser.java sym.java: parser.cup
+	$(CUP) -interface -parser Parser $<
+
 
 # Generate scanner for Stage 2 (IR processing)
 $(IR_SCANNER_OUT): $(IR_SCANNER_SRC)
 	$(JFLEX) $(IR_SCANNER_SRC)
 
-# Generate parser for Stage 2 (IR processing)
-$(IR_PARSER_OUT): $(IR_PARSER_SRC)
-	$(CUP) -interface -parser irParser -symbols irSym $(IR_PARSER_SRC)
+
+# Generate parser for Stage 2
+irParser.java irSym.java: irparser.cup
+	$(CUP) -interface -parser irParser -symbols irSym $<
 
 # Compile all Java files
 compiler: $(SCANNER_OUT) $(PARSER_OUT) $(IR_SCANNER_OUT) $(IR_PARSER_OUT)
-	$(JAVAC) -cp $(CUP_RUNTIME) *.java
+	$(JAVAC) -cp .:$(CUP_RUNTIME) *.java
 
 # Run the compiler
 run: compiler
@@ -51,4 +57,6 @@ run: compiler
 
 # Clean generated and compiled files
 clean:
-	rm -f $(SCANNER_OUT) $(PARSER_OUT) $(IR_SCANNER_OUT) $(IR_PARSER_OUT) *.class $(IR_FILE) $(JAVA_OUTPUT)
+	rm -f $(SCANNER_OUT) $(PARSER_OUT) $(IR_SCANNER_OUT) $(IR_PARSER_OUT) \
+	      *.class $(IR_FILE) $(JAVA_OUTPUT) \
+	      *~ *:Zone.Identifier
