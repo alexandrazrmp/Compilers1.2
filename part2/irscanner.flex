@@ -64,21 +64,21 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 <YYINITIAL> {
 /* operators */
- "+"            { return symbol(irSym.CONCAT); }    //concatenation operation
+ "+"            { return symbol(irSym.CONCAT_IR); }    //concatenation operation
 
 
-"if"            { return symbol(irSym.IF); }                 
-"else"          { return symbol(irSym.ELSE); }
-"prefix"        { return symbol(irSym.PREFIX); }
-"reverse"       { return symbol(irSym.REVERSE); }
+"if"            { return symbol(irSym.IF_IR); }                 
+"else"          { return symbol(irSym.ELSE_IR); }
+"prefix"        { return symbol(irSym.PREFIX_IR); }
+"reverse"       { return symbol(irSym.REVERSE_IR); }
 
- "("            { return symbol(irSym.LPAREN); }
- ")"            { return symbol(irSym.RPAREN); }
- "{"            { return symbol(irSym.LCBRACKET); }
- "}"            { return symbol(irSym.RCBRACKET); }
- ","            { return symbol(irSym.COMMA); }
+ "("            { return symbol(irSym.LPAREN_IR); }
+ ")"            { return symbol(irSym.RPAREN_IR); }
+ "{"            { return symbol(irSym.LCBRACKET_IR); }
+ "}"            { return symbol(irSym.RCBRACKET_IR); }
+ ","            { return symbol(irSym.COMMA_IR); }
 
- [a-zA-Z_][a-zA-Z0-9_]*    { return symbol(irSym.ID, yytext()); }
+ [a-zA-Z_][a-zA-Z0-9_]*    { return symbol(irSym.ID_IR, yytext()); }
 
  \"             { stringBuffer.setLength(0); yybegin(STRING); }
  {WhiteSpace}   { /* just skip what was found, do nothing */ }
@@ -86,7 +86,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 <STRING> {
       \"                             { yybegin(YYINITIAL);
-                                       return symbol(irSym.STRING_LITERAL, stringBuffer.toString()); }
+                                       return symbol(irSym.STRING_LITERAL_IR, stringBuffer.toString()); }
       [^\n\r\"\\]+                   { stringBuffer.append( yytext() ); }
       \\t                            { stringBuffer.append('\t'); }
       \\n                            { stringBuffer.append('\n'); }

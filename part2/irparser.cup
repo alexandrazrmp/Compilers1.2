@@ -22,9 +22,9 @@ scan with {: return s.next_token(); :};
 
 
 /* Terminals (tokens returned by the scanner). */
-terminal            CONCAT, LPAREN, RPAREN, LCBRACKET, RCBRACKET, COMMA,
-                    IF, ELSE, REVERSE, PREFIX;
-terminal String     STRING_LITERAL, ID;        /*our scanner provides strings*/
+terminal            CONCAT_IR, LPAREN_IR, RPAREN_IR, LCBRACKET_IR, RCBRACKET_IR, COMMA_IR,
+                    IF_IR, ELSE_IR, REVERSE_IR, PREFIX_IR;
+terminal String     STRING_LITERAL_IR, ID_IR;        /*our scanner provides strings*/
 
 /*  Non terminals */
 non terminal s, function_decl, parameters, function_calls, function_call,  function_decls, fd_parameters, parameter;
@@ -34,9 +34,9 @@ non terminal String     expr, nested_function_call;
 /**
  *  Precedence Declarations
  */
-precedence left IF, ELSE;
-precedence left CONCAT;
-precedence left REVERSE;
+precedence left IF_IR, ELSE_IR;
+precedence left CONCAT_IR;
+precedence left REVERSE_IR;
 
 
 /**
@@ -53,49 +53,49 @@ function_decls ::=  function_decls:rest function_decl:fd {: RESULT = rest + "\n"
                     |function_decl:fd {: RESULT = fd;:}
                     ;
 
-function_decl ::= ID:name LPAREN fd_parameters:p RPAREN LCBRACKET  function_body:body  RCBRACKET 
+function_decl ::= ID_IR:name LPAREN_IR fd_parameters:p RPAREN_IR LCBRACKET_IR  function_body:body  RCBRACKET_IR 
                 {: RESULT = "    public static String "+ name + "(" + p + ") {\n" + body + "\n    }"; :}
-                | ID:name LPAREN RPAREN LCBRACKET function_body:body RCBRACKET 
+                | ID_IR:name LPAREN_IR RPAREN_IR LCBRACKET_IR function_body:body RCBRACKET_IR 
                 {: RESULT = "    public static String "+ name + "() {\n" + body + "\n    }"; :}
                 ;
 
-fd_parameters ::= fd_parameters:rest COMMA ID:id {: RESULT =  rest + ", " + "String " + id; :}
-                  | ID:id    {: RESULT = "String " + id; :}
+fd_parameters ::= fd_parameters:rest COMMA_IR ID_IR:id {: RESULT =  rest + ", " + "String " + id; :}
+                  | ID_IR:id    {: RESULT = "String " + id; :}
                   ;
 
 function_calls ::= function_calls:rest function_call:fc {: RESULT = rest + "" + fc; :}
                 | function_call:fc {: RESULT = fc; :}
                 ;
 
-function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = "        System.out.println(" + name + "(" + p + "));\n"; :}
-                    | ID:name LPAREN RPAREN {: RESULT = "        System.out.println(" + name + "());\n"; :}
+function_call ::=   ID_IR:name LPAREN_IR parameters:p RPAREN_IR {: RESULT = "        System.out.println(" + name + "(" + p + "));\n"; :}
+                    | ID_IR:name LPAREN_IR RPAREN_IR {: RESULT = "        System.out.println(" + name + "());\n"; :}
                     ;
 
 function_body ::= expr:e {: RESULT = "        return "+ e +";"; :}
-                | IF LPAREN if_body:b RPAREN function_body:b1 ELSE function_body:b2 
+                | IF_IR LPAREN_IR if_body:b RPAREN_IR function_body:b1 ELSE_IR function_body:b2 
                 {: RESULT = "        if (" + b + ") {\n    " + b1 + "\n        } else {\n    " + b2 + "\n        }" ; :}
                 ;
 
 
-if_body ::= expr:id1 PREFIX expr:id2  {:RESULT = id1 + ".startsWith(" + id2 + ")";:}
+if_body ::= expr:id1 PREFIX_IR expr:id2  {:RESULT = id1 + ".startsWith(" + id2 + ")";:}
             ;
 
 
-expr ::= expr:e1 CONCAT expr:e2  {: RESULT = e1 + " + " + e2; :}
-     | STRING_LITERAL:s          {: RESULT = "\"" + s + "\""; :}
-     | ID:var                      {: RESULT = var; :}
+expr ::= expr:e1 CONCAT_IR expr:e2  {: RESULT = e1 + " + " + e2; :}
+     | STRING_LITERAL_IR:s          {: RESULT = "\"" + s + "\""; :}
+     | ID_IR:var                      {: RESULT = var; :}
      | nested_function_call:fc {: RESULT = fc; :}
-     | REVERSE expr:e   {: RESULT = "new StringBuilder(" + e + ").reverse().toString()"; :}
+     | REVERSE_IR expr:e   {: RESULT = "new StringBuilder(" + e + ").reverse().toString()"; :}
      ;
 
-parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
+parameters ::= parameters:rest COMMA_IR parameter:p {: RESULT = rest + ", " + p; :}
              | parameter:p {: RESULT = p; :}
              ;
 
-parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\""; :}
+parameter ::= STRING_LITERAL_IR:sl {: RESULT = "\"" + sl + "\""; :}
             | nested_function_call:fc {: RESULT = fc; :}
             ;
 
-nested_function_call ::=   ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :}
-                    | ID:name LPAREN RPAREN {: RESULT = name + "()"; :}
+nested_function_call ::=   ID_IR:name LPAREN_IR parameters:p RPAREN_IR {: RESULT = name + "(" + p + ")"; :}
+                    | ID_IR:name LPAREN_IR RPAREN_IR {: RESULT = name + "()"; :}
                     ;
