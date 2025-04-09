@@ -64,21 +64,21 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 <YYINITIAL> {
 /* operators */
- "+"            { return symbol(sym.CONCAT); }    //concatenation operation
+ "+"            { return symbol(irSym.CONCAT); }    //concatenation operation
 
 
-"if"            { return symbol(sym.IF); }                 
-"else"          { return symbol(sym.ELSE); }
-"prefix"        { return symbol(sym.PREFIX); }
-"reverse"       { return symbol(sym.REVERSE); }
+"if"            { return symbol(irSym.IF); }                 
+"else"          { return symbol(irSym.ELSE); }
+"prefix"        { return symbol(irSym.PREFIX); }
+"reverse"       { return symbol(irSym.REVERSE); }
 
- "("            { return symbol(sym.LPAREN); }
- ")"            { return symbol(sym.RPAREN); }
- "{"            { return symbol(sym.LCBRACKET); }
- "}"            { return symbol(sym.RCBRACKET); }
- ","            { return symbol(sym.COMMA); }
+ "("            { return symbol(irSym.LPAREN); }
+ ")"            { return symbol(irSym.RPAREN); }
+ "{"            { return symbol(irSym.LCBRACKET); }
+ "}"            { return symbol(irSym.RCBRACKET); }
+ ","            { return symbol(irSym.COMMA); }
 
- [a-zA-Z_][a-zA-Z0-9_]*    { return symbol(sym.ID, yytext()); }
+ [a-zA-Z_][a-zA-Z0-9_]*    { return symbol(irSym.ID, yytext()); }
 
  \"             { stringBuffer.setLength(0); yybegin(STRING); }
  {WhiteSpace}   { /* just skip what was found, do nothing */ }
@@ -86,7 +86,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 <STRING> {
       \"                             { yybegin(YYINITIAL);
-                                       return symbol(sym.STRING_LITERAL, stringBuffer.toString()); }
+                                       return symbol(irSym.STRING_LITERAL, stringBuffer.toString()); }
       [^\n\r\"\\]+                   { stringBuffer.append( yytext() ); }
       \\t                            { stringBuffer.append('\t'); }
       \\n                            { stringBuffer.append('\n'); }
