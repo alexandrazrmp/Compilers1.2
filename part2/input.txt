@@ -102,8 +102,4 @@ fullname(name(), name(), surname())
 
 fullname("a", " ", "b")
 
-parameters  ::= parameters:rest COMMA STRING_LITERAL:sl   {: RESULT = rest + ", " + "\"" + sl + "\""; :}
-                |STRING_LITERAL:sl {:RESULT = "\"" + sl + "\"";:}
-                |parameters:rest COMMA nested_function_call:fc   {: RESULT = rest + ", " + fc; :}
-                | nested_function_call:fc {:RESULT = fc;:}
-                ;
+

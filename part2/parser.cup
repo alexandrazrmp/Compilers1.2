@@ -61,14 +61,14 @@ function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p 
                  | ID:name LPAREN RPAREN {: RESULT = name + "()\n"; :} ;
 
 function_body ::= expr:e {: RESULT = e; :}
-                | IF LPAREN if_body:body RPAREN function_body:b1 ELSE function_body:b2 
-                {: RESULT = "if (" + body + ")\n        " + b1 + "\n     else\n        " + b2; :}
+                | IF LPAREN expr:e1 PREFIX expr:e2 RPAREN function_body:b1 ELSE function_body:b2 
+                {: RESULT = "if (" + e1 + " prefix " + e2 + ")\n        " + b1 + "\n     else\n        " + b2; :}
+                | IF LPAREN expr:e1 SUFFIX expr:e2 RPAREN function_body:b1 ELSE function_body:b2 
+                {: RESULT = "if (" + "reverse " + e1 + " prefix reverse " + e2 + ")\n        " + b1 + "\n     else\n        " + b2; :}
+                | IF LPAREN expr:e1 EQUAL expr:e2 RPAREN function_body:b1 ELSE function_body:b2 
+                {: RESULT = "if (" + e1 + " prefix " + e2 + ")\n        " + "if (" + e2 + " prefix " + e1 + ")\n        "
+                 + b1 + "\n     else\n        " + b2 + "\n     else\n        " + b2; :}
                 ;
-
-if_body ::= expr:e1 PREFIX expr:e2  {: RESULT = e1 + " prefix " + e2; :}
-            | expr:e1 SUFFIX expr:e2  {: RESULT = "reverse " + e1 + " prefix reverse " + e2; :}
-            | expr:e1 EQUAL expr:e2  {: RESULT = e1 + " prefix " + e2; :}
-            ;
 
 expr ::= expr:e1 CONCAT expr:e2 {: RESULT = e1 + "+" + e2; :}
        | STRING_LITERAL:s {: RESULT = "\"" + s + "\""; :}
