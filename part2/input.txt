@@ -1,0 +1,105 @@
+name() {
+  "John"
+}
+
+repeat(x) {
+  x + x
+}
+
+cond_repeat(c, x) {
+  if (x = c)
+    repeat(name())
+  else
+    x
+}
+
+cond_repeat("yes", name())
+cond_repeat("no?", "Jane")
+
+
+
+name() {
+  "John"
+}
+
+repeat(x) {
+  x + x
+}
+
+cond_repeat(c, x) {
+  if ("?" suffix c)
+    repeat(name())
+  else
+    x
+}
+
+cond_repeat("yes", name())
+cond_repeat("no?", "Jane")
+
+
+
+works
+
+name(){
+  "John"
+}
+
+repeat(x){
+  x + x
+}
+
+cond_repeat(c, x){
+  if (reverse x prefix c)
+    name()
+  else
+    x
+}
+repeat(name())
+
+cond_repeat("no?", "Jane")
+
+
+cond_repeat("yes", name())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+name()  {
+  "John"
+}
+    
+surname() {
+  "Doe"
+}
+    
+fullname(first_name, sep, last_name) {
+  first_name + sep + last_name
+}
+
+name()
+
+surname()
+fullname("a", " ", "b")
+fullname("aaaaaaaa", "", " ")
+
+fullname(name(), " ", surname())
+
+fullname(name(), name(), surname())
+
+fullname("a", " ", "b")
+
+
