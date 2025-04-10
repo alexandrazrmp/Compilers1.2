@@ -18,7 +18,23 @@ cond_repeat("no?", "Jane")
 
 
 
+name() {
+  "John"
+}
 
+repeat(x) {
+  x + x
+}
+
+cond_repeat(c, x) {
+  if ("?" suffix c)
+    repeat(x)
+  else
+    x
+}
+
+cond_repeat("yes", name())
+cond_repeat("no?", "Jane")
 
 
 
