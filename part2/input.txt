@@ -8,7 +8,7 @@ repeat(x) {
 
 cond_repeat(c, x) {
   if (x = c)
-    repeat(x)
+    repeat(name())
   else
     x
 }
@@ -28,7 +28,7 @@ repeat(x) {
 
 cond_repeat(c, x) {
   if ("?" suffix c)
-    repeat(x)
+    repeat(name())
   else
     x
 }

@@ -27,17 +27,17 @@ terminal            CONCAT_IR, LPAREN_IR, RPAREN_IR, LCBRACKET_IR, RCBRACKET_IR,
 terminal String     STRING_LITERAL_IR, ID_IR;        /*our scanner provides strings*/
 
 /*  Non terminals */
-non terminal s, function_decl, parameters, function_calls, function_call,  function_decls, fd_parameters, parameter;
+non terminal s, function_decl, parameters, function_calls, function_call,  function_decls, fd_parameters;
 non terminal function_body, if_body;
 non terminal String     expr, nested_function_call;
 
 /**
  *  Precedence Declarations
  */
+
 precedence left IF_IR, ELSE_IR;
 precedence left CONCAT_IR;
 precedence left REVERSE_IR;
-
 
 /**
  *  The Grammar Rules
@@ -88,13 +88,10 @@ expr ::= expr:e1 CONCAT_IR expr:e2  {: RESULT = e1 + " + " + e2; :}
      | REVERSE_IR expr:e   {: RESULT = "new StringBuilder(" + e + ").reverse().toString()"; :}
      ;
 
-parameters ::= parameters:rest COMMA_IR parameter:p {: RESULT = rest + ", " + p; :}
-             | parameter:p {: RESULT = p; :}
+parameters ::= parameters:rest COMMA_IR expr:p {: RESULT = rest + ", " + p; :}
+             | expr:p {: RESULT = p; :}
              ;
 
-parameter ::= STRING_LITERAL_IR:sl {: RESULT = "\"" + sl + "\""; :}
-            | nested_function_call:fc {: RESULT = fc; :}
-            ;
 
 nested_function_call ::=   ID_IR:name LPAREN_IR parameters:p RPAREN_IR {: RESULT = name + "(" + p + ")"; :}
                     | ID_IR:name LPAREN_IR RPAREN_IR {: RESULT = name + "()"; :}

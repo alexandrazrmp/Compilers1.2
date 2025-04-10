@@ -35,8 +35,8 @@ $(IR_PARSER_OUT): $(IR_SCANNER_OUT)
 
 # Generate parser for Stage 1
 Parser.java sym.java: parser.cup
-	$(CUP) -interface -parser Parser $<
-
+	$(CUP) -expect 5 -interface -parser Parser $<
+#	$(CUP) $(CUPFLAGS) -interface -parser Parser $<
 
 # Generate scanner for Stage 2 (IR processing)
 $(IR_SCANNER_OUT): $(IR_SCANNER_SRC)
@@ -45,7 +45,8 @@ $(IR_SCANNER_OUT): $(IR_SCANNER_SRC)
 
 # Generate parser for Stage 2
 irParser.java irSym.java: irparser.cup
-	$(CUP) -interface -parser irParser -symbols irSym $<
+	$(CUP) -expect 5 -interface -parser irParser -symbols irSym $<
+#	$(CUP) $(CUPFLAGS) -interface -parser irParser -symbols irSym $<
 
 # Compile all Java files
 compiler: $(SCANNER_OUT) $(PARSER_OUT) $(IR_SCANNER_OUT) $(IR_PARSER_OUT)

@@ -28,7 +28,7 @@ terminal String     ID;
 
 
 /* Non-terminals */
-non terminal s, function_decl, parameters, function_calls, function_decls, fd_parameters, parameter;
+non terminal s, function_decl, parameters, function_calls, function_decls, fd_parameters;
 non terminal function_body, function_call, if_body;
 non terminal String expr, nested_function_call;
 
@@ -38,6 +38,7 @@ non terminal String expr, nested_function_call;
 precedence left IF, ELSE;
 precedence left CONCAT;
 precedence left REVERSE;
+
 
 /* The Grammar Rules (modified actions) */
 s ::= function_decls:fd function_calls:fc {: System.out.println(fd); System.out.println(fc); :} ;
@@ -76,11 +77,9 @@ expr ::= expr:e1 CONCAT expr:e2 {: RESULT = e1 + "+" + e2; :}
        | REVERSE expr:e {: RESULT = "reverse " + e; :}
         ;
 
-parameters ::= parameters:rest COMMA parameter:p {: RESULT = rest + ", " + p; :}
-             | parameter:p {: RESULT = p; :} ;
+parameters ::= parameters:rest COMMA expr:p {: RESULT = rest + ", " + p; :}
+             | expr:p {: RESULT = p; :} ;
 
-parameter ::= STRING_LITERAL:sl {: RESULT = "\"" + sl + "\""; :}
-            | nested_function_call:fc {: RESULT = fc; :} ;
 
 nested_function_call ::= ID:name LPAREN parameters:p RPAREN {: RESULT = name + "(" + p + ")"; :}
                        | ID:name LPAREN RPAREN {: RESULT = name + "()"; :} ;
